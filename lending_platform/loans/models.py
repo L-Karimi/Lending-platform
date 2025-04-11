@@ -1,5 +1,10 @@
+import uuid
 from django.db import models
 from django.utils import timezone
+
+class Meta:
+    verbose_name = "Loan Application"
+    ordering = ['-application_date']
 
 class CustomerSubscription(models.Model):
     customer_number = models.CharField(max_length=50, unique=True)
@@ -9,7 +14,7 @@ class CustomerSubscription(models.Model):
 
     def __str__(self):
         return f"{self.customer_number} - {'Active' if self.is_active else 'Inactive'}"
-
+    
 class LoanApplication(models.Model):
     APPLICATION_STATUS = [
         ('PENDING', 'Pending'),
@@ -21,7 +26,7 @@ class LoanApplication(models.Model):
         ('FAILED', 'Failed'),
     ]
     
-    application_id = models.CharField(max_length=36, unique=True)
+    application_id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True)
     customer_number = models.CharField(max_length=50)
     requested_amount = models.DecimalField(max_digits=12, decimal_places=2)
     approved_amount = models.DecimalField(max_digits=12, decimal_places=2, null=True, blank=True)
@@ -52,3 +57,20 @@ class ClientRegistration(models.Model):
 
     def __str__(self):
         return f"{self.name} - {self.token}"
+class CustomerTransaction(models.Model):
+    customer_number = models.CharField(max_length=50)
+    account_number = models.CharField(max_length=50)
+    transaction_date = models.DateTimeField()
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    transaction_type = models.CharField(max_length=20)  # e.g., 'CREDIT', 'DEBIT'
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['customer_number']),
+        ]
+class LoanRepayment(models.Model):
+    loan = models.ForeignKey(LoanApplication, on_delete=models.CASCADE, related_name='repayments')
+    amount = models.DecimalField(max_digits=12, decimal_places=2)
+    payment_date = models.DateTimeField(auto_now_add=True)
+    transaction_reference = models.CharField(max_length=100)
