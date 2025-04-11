@@ -11,7 +11,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'corsheaders',
     'loans',
+    'zeep',
 ]
 ROOT_URLCONF = 'lending_platform.urls'
 
@@ -36,6 +38,7 @@ REST_FRAMEWORK = {
     ],
 }
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -58,7 +61,6 @@ STATIC_URL = '/static/'
 TIME_ZONE = os.getenv('TIME_ZONE', 'Africa/Nairobi')
 SECRET_KEY = os.getenv('SECRET_KEY', 't+zlp_hmj0uro^3kye(w-c#$nz(ojf6umu_h-z-0m2gtun2544')
 
-DEBUG = os.getenv('DEBUG', 'True').lower() == 'true'
 # Allowed hosts - handle string splitting safely
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '127.0.0.1,localhost')
 ALLOWED_HOSTS = [host.strip() for host in allowed_hosts.split(',') if host.strip()]
@@ -79,3 +81,19 @@ SERVICE_NAME = os.getenv('SERVICE_NAME', 'DigitalLendingPlatform')
 SERVICE_USERNAME = os.getenv('SERVICE_USERNAME', 'lending_user')
 SERVICE_PASSWORD = os.getenv('SERVICE_PASSWORD', 'lending_pass123')
 BASE_URL = os.getenv('BASE_URL', 'http://localhost:8000')
+# settings.py
+# Retry settings for Scoring Engine
+SCORING_MAX_RETRIES = int(os.getenv('SCORING_MAX_RETRIES', 3))  # Default: 3 retries
+SCORING_RETRY_DELAY = int(os.getenv('SCORING_RETRY_DELAY', 2))  # Default: 2 seconds
+SCORING_TIMEOUT = int(os.getenv('SCORING_TIMEOUT', 10))  # Default: 10 seconds
+
+# CBS SOAP Timeout
+CBS_TIMEOUT = int(os.getenv('CBS_TIMEOUT', 15))  # Default: 15 seconds
+# settings.py
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # Mobile App dev server
+    "https://bank-mobile-app.com",  # Production mobile app
+]
+# settings.py
+# Store the token after registering with Scoring Engine
+SCORING_CLIENT_TOKEN = None  # Will be set dynamically after registration
