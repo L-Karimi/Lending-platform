@@ -1,34 +1,70 @@
-# Byte-compiled / optimized / DLL files
-__pycache__/
-*.pyc
-*.pyo
-*.pyd
+# Python
 
-# Virtual environment
+**pycache**/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+
 .venv/
+venv/
+env/
 lending_env/
 
-# SQLite database
-db.sqlite3
+# Environment Variables
 
-*.env
 .env
+*.env
 
-# Media files 
+# Django
+
+db.sqlite3
+db.sqlite3-journal
 media/
+staticfiles/
 
-# Static files 
+# Collected Static Files
+
 static/
 
 # Logs
+
 *.log
 
-# OS generated files
+# Coverage & Testing
+
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+.cache/
+
+# Build Artifacts
+
+build/
+dist/
+*.egg-info/
+
+# IDEs & Editors
+
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# OS Files
+
 .DS_Store
 Thumbs.db
 
-# Editor/
-.idea/
-*.swp
-*.swo
-*.vscode/
+# Jupyter
+
+.ipynb_checkpoints/
+
+# MyPy
+
+.mypy_cache/
+
+# Ruff
+
+.ruff_cache/
